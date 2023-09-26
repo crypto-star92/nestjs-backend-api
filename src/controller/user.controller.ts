@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
-import { CreateUserInput } from './model/user.input'
-import { UserService } from './user.service'
+import { CreateUserInput } from '../model/user/user.input'
+import { UserService } from '../services/user.service'
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 @ApiTags('User')
@@ -24,7 +24,6 @@ export class UserController {
 
     @Get('/list')
     listUser() {
-        console.log("+++++++++++++++++++++")
         return this.userService.listUser()
     }
 

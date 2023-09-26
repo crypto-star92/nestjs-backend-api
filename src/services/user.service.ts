@@ -1,15 +1,30 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { User } from './model/user.schema'
+import { User } from '../model/user/user.schema'
 import { Model } from 'mongoose'
-import { CreateUserInput, UpdateUserInput } from './model/user.input'
-import { UserPayload } from './model/user.payload'
+import { CreateUserInput, LoginUserInput, UpdateUserInput } from '../model/user/user.input'
+import { UserPayload } from '../model/user/user.payload'
 
 @Injectable()
 export class UserService {
     constructor(@InjectModel(User.name) private userModel: Model<User>) { }
 
+    async validateUser(body: LoginUserInput): Promise<UserPayload> {
+        const user = await this.userModel.findOne({ email: body.email }).exec()
+
+        if (!user || user.password != body.password) {
+            throw new UnauthorizedException('Invalid Credentials');
+        }
+
+        return user
+    }
+
     async createUser(body: CreateUserInput): Promise<UserPayload> {
+        const existingUser = await this.userModel.findOne({ email: body.email }).exec()
+        if (existingUser) {
+            throw new ConflictException('User already exists')
+        }
+
         const createdUser = new this.userModel(body)
         const user = await createdUser.save()
         return user

@@ -3,13 +3,6 @@ import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator'
 
 export class CreateUserInput {
     @ApiProperty({
-        example: 'John Doe',
-        required: true
-    })    
-    @IsString()
-    fullName: string
-
-    @ApiProperty({
         example: 'johndoe@example.com',
         required: true
     })
@@ -17,11 +10,12 @@ export class CreateUserInput {
     email: string
 
     @ApiProperty({
-        example: 'johndoe@example.com',
-    })
-    @IsEmail()
-    bio: string
-    
+        example: 'John Doe',
+        required: true
+    })    
+    @IsString()
+    fullName: string
+
     @ApiProperty({
         example: '12345678',
         required: true
@@ -34,4 +28,8 @@ export class CreateUserInput {
 
 export class UpdateUserInput extends OmitType(CreateUserInput, [
     'password'
+] as const) { }
+
+export class LoginUserInput extends OmitType(CreateUserInput, [
+    'fullName'
 ] as const) { }
