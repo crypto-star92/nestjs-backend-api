@@ -28,10 +28,6 @@ import { UserModule } from './user/user.module';
     ]),
     MongooseModule.forRoot(process.env.DATABASE_URI, {
       dbName: process.env.DATABASE_NAME,
-      auth: {
-        username: process.env.DATABASE_UER,
-        password: process.env.DATABASE_PWD,
-      },
     }),
 
     UserModule,
